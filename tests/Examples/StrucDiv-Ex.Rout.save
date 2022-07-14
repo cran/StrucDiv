@@ -1,0 +1,87 @@
+
+R version 4.1.2 (2021-11-01) -- "Bird Hippie"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "StrucDiv"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('StrucDiv')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("StrucDiv")
+> ### * StrucDiv
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: StrucDiv
+> ### Title: Calculate spatial structural diversity for an arbitrary raster
+> ###   layer.
+> ### Aliases: StrucDiv
+> 
+> ### ** Examples
+> 
+> # Calculate contrast on a small raster file with random normal distribution
+> a <- raster::raster(matrix(rnorm(648), 18, 36))
+> raster::plot(a)
+> contrast_a <- StrucDiv(a, 3, fun = contrast, na.handling = na.omit, rank = FALSE)
+Extracting values from raster file
+Calculating gray level co-occurrence matrix
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating horizontal structural diversity
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+> raster::plot(contrast_a)
+> 
+> # Calculate dissimilarity on a small raster file with random normal distribution
+> b <- raster::raster(matrix(rnorm(100), 10, 10))
+> raster::plot(b)
+> dissim_b <- StrucDiv(b, 5, fun = dissimilarity, na.handling = na.pass, rank = FALSE)
+Extracting values from raster file
+Calculating gray level co-occurrence matrix
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+**************************************************************Calculating horizontal structural diversity
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+**************************************************************> raster::plot(dissim_b)
+> 
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  0.913 0.028 0.941 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')
