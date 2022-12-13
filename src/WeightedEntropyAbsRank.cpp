@@ -153,7 +153,7 @@ NumericVector WeightedEntropyAbsRank( NumericMatrix Hetx, List PMat,
             p.increment(); // update progress
             
             if(xPMatSub(m,n) == 0) EntMat(m,n) = xPMatSub(m,n) * 0;
-            else EntMat(m,n) = abs( ValPos[m] - ValPos[n] )*( xPMatSub(m,n) * (-log(xPMatSub(m,n))) );
+            else EntMat(m,n) = std::fabs( ValPos[m] - ValPos[n] )*( xPMatSub(m,n) * (-log(xPMatSub(m,n))) );
             
           }
         }

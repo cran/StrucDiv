@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 
 ## ----example, echo=TRUE, message = FALSE, eval=FALSE--------------------------
 #  
-#  entNorm <- StrucDiv(ndvi.15gl, wsl = 5, dist = 1, angle = "all", fun = entropyNorm,
+#  entNorm <- strucDiv(ndvi.15gl, wsl = 5, dist = 1, angle = "all", fun = entropyNorm,
 #                    na.handling = na.pass)
 #  
 

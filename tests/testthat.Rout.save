@@ -1,7 +1,7 @@
 
 R version 4.1.2 (2021-11-01) -- "Bird Hippie"
 Copyright (C) 2021 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+Platform: x86_64-apple-darwin17.0 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -79,4 +79,4 @@ Calculating horizontal structural diversity
 > 
 > proc.time()
    user  system elapsed 
-  0.864   0.043   0.903 
+  1.244   0.077   1.321 

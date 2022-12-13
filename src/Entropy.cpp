@@ -11,8 +11,8 @@ class MyProgressBar: public ProgressBar{
   public: // ====== LIFECYCLE =====
     
     /**
-     * Main constructor
-     */
+    * Main constructor
+    */
     MyProgressBar()  { reset(); }
     
     ~MyProgressBar() {}
@@ -96,7 +96,8 @@ private:
 
 
 // [[Rcpp::export(name = ".Entropy")]]
-NumericVector Entropy( NumericMatrix Hetx, List PMat,
+NumericVector Entropy( NumericMatrix Hetx, 
+                       List PMat,
                        bool narm,
                        bool display_progress=true){
   
@@ -109,7 +110,7 @@ NumericVector Entropy( NumericMatrix Hetx, List PMat,
   for(int i = 0; i < Hetx.nrow(); i++){
     
     NumericVector x = Hetx(i,_);
-    
+
     LogicalVector v = is_na(x);
     
     if(narm==0 && any(v).is_true()) {

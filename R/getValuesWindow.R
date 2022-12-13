@@ -1,23 +1,30 @@
-############################################################################################################################
+#============================================================================================
 #
-# getValuesWindow
+# StrucDiv::getValuesWindow
+# Modified function from raster package, raster:: getValuesFocal()
 #
-############################################################################################################################
-#
-# # Dependent Function from Raster package - modified
-#
-############################################################################################################################
+#============================================================================================
 
-# GET NEIGHBOURHOOD VALUES FOR EACH PIXEL
+#' @name getValuesWindow
+#' @rdname getValuesWindow
+#' @title Retrieve pixel values of a defined area. 
+#' The area is defined by the size of a window, which is centered on one pixel.
+#' @description Modified R Code from raster package raster::getValuesFocal.
+#' Returns one row per pixel, which contains the values
+#' of the pixel neighborhood that is defined by the size of the window.
+#' The size of the window is defined by the window side length (wsl).
+#' The window is centered on one specific pixel.
+#' @param x raster layer. The input raster layer.
+#' @param wsl integer. The window side length. The window is defined by \code{wsl x wsl}.
+#' @param padValue atomic. If a pixel is on the edge of an image, padding should be used?
+#' Can be NA or a value.
+#' @param aroundTheGlobe logical. Does the image go around the globe?
+#' @param ... possible further arguments.
+#' @return Returns a matrix.
+#' The matrix contains the values of the defined window centered on the respective pixel.
+#' @export
 
-# Modified R Code from raster package - getValuesFocal
-# to retrieve values of defined neighbourhood
-# returns one row per pixel (row containing pixel neighbourhood (wsl)
-# currently programmed with NA padding
-
-############################################################################################################################
-
-.getValuesWindow <- function(x, wsl, padValue, aroundTheGlobe, ...) {
+getValuesWindow <- function(x, wsl, padValue, aroundTheGlobe, ...) {
   
   message("Extracting values from raster file")
 
@@ -91,6 +98,22 @@
     }
   }
   res
+}
+
+
+.WM <- function(nrow, ncol, ul, nNA){
+  ul <- ul - 2*nNA
+  ul1 <- ul + 1
+  w <- matrix(1, nrow, ncol)
+  w[nNA+(1:ul),] <- 1:ul/ul1
+  w[nrow-nNA-(0:(ul-1)),] <- 1:ul/ul1
+  w[, nNA+1:ul] <- w[,nNA+1:ul] * (rep(1:ul, each=ncol))/ul1
+  w[, ncol-nNA-(0:(ul-1))] <- w[,ncol-nNA-(0:(ul-1))] * (rep(1:ul, each=ncol))/ul1
+  w[1:nNA,] <- 0
+  w[,1:nNA] <- 0
+  w[nrow-(0:(nNA-1)),] <- 0
+  w[,ncol-(0:(nNA-1))] <- 0
+  w
 }
 
 

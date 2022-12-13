@@ -151,7 +151,7 @@ NumericVector DissimilarityRank( NumericMatrix Hetx, List PMat,
             
             p.increment(); // update progress
             
-            DisMat(m,n) = xPMatSub(m,n) * abs(ValPos[m] - ValPos[n]);
+            DisMat(m,n) = xPMatSub(m,n) * std::fabs(ValPos[m] - ValPos[n]);
             
           }
         }

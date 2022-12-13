@@ -1,7 +1,7 @@
 
 R version 4.1.2 (2021-11-01) -- "Bird Hippie"
 Copyright (C) 2021 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+Platform: x86_64-apple-darwin17.0 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -25,22 +25,51 @@ Type 'q()' to quit R.
 > base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
 > base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
 > cleanEx()
-> nameEx("StrucDiv")
-> ### * StrucDiv
+> nameEx("ndvi.15gl")
+> ### * ndvi.15gl
 > 
 > flush(stderr()); flush(stdout())
 > 
-> ### Name: StrucDiv
-> ### Title: Calculate spatial structural diversity for an arbitrary raster
-> ###   layer.
-> ### Aliases: StrucDiv
+> ### Name: ndvi.15gl
+> ### Title: NDVI, 15 gray levels
+> ### Aliases: ndvi.15gl
+> ### Keywords: datasets
 > 
 > ### ** Examples
 > 
-> # Calculate contrast on a small raster file with random normal distribution
+> # This dataset is essentially constructed via:
+> nGrayLevels <- 15
+> require(raster)
+Loading required package: raster
+Loading required package: sp
+> ndvi <- raster(StrucDiv::ndvi)
+> ndvi15 <- cut(ndvi, breaks=seq(minValue(ndvi), maxValue(ndvi), len=nGrayLevels + 1), 
++               include.lowest=TRUE, right=FALSE)
+> 
+> 
+> 
+> 
+> cleanEx()
+
+detaching ‘package:raster’, ‘package:sp’
+
+> nameEx("strucDiv")
+> ### * strucDiv
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: strucDiv
+> ### Title: Quantify Spatial Structural Diversity in an Arbitrary Raster
+> ###   Layer
+> ### Aliases: strucDiv
+> 
+> ### ** Examples
+> 
+> # Construct a small raster file containing realizations of normal random variables:
 > a <- raster::raster(matrix(rnorm(648), 18, 36))
 > raster::plot(a)
-> contrast_a <- StrucDiv(a, 3, fun = contrast, na.handling = na.omit, rank = FALSE)
+> # Calculate contrast:
+> contrast_a <- strucDiv(a, wsl = 3, fun = contrast, na.handling = na.omit, rank = FALSE)
 Extracting values from raster file
 Calculating gray level co-occurrence matrix
 0%   10   20   30   40   50   60   70   80   90   100%
@@ -52,10 +81,11 @@ Calculating horizontal structural diversity
 **************************************************|
 > raster::plot(contrast_a)
 > 
-> # Calculate dissimilarity on a small raster file with random normal distribution
+> # Calculate dissimilarity:
 > b <- raster::raster(matrix(rnorm(100), 10, 10))
 > raster::plot(b)
-> dissim_b <- StrucDiv(b, 5, fun = dissimilarity, na.handling = na.pass, rank = FALSE)
+> dissim_b <- strucDiv(b, wsl = 5, dist = 1, angle =  "all", fun = dissimilarity, 
++     na.handling = na.pass, rank = FALSE)
 Extracting values from raster file
 Calculating gray level co-occurrence matrix
 0%   10   20   30   40   50   60   70   80   90   100%
@@ -67,6 +97,100 @@ Calculating gray level co-occurrence matrix
 **************************************************|
 **************************************************************> raster::plot(dissim_b)
 > 
+> # Calculate structural diversity entropy with delta = 2 on NDVI data binned to 15 gray levels
+> ndvi.15gl <- raster::raster(ndvi.15gl)
+> sde_ndvi15 <- strucDiv(ndvi.15gl, wsl = 3, fun = entropy, delta = 2, na.handling = na.pass, 
++     rank = FALSE)
+Extracting values from raster file
+Calculating gray level co-occurrence matrix
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating horizontal structural diversity
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+> raster::plot(sde_ndvi15)
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("strucDivDom")
+> ### * strucDivDom
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: strucDivDom
+> ### Title: Returns the structural diversity value, the gray level
+> ###   co-occurrence matrix (GLCM) and the structural diversity matrix of
+> ###   the domain.
+> ### Aliases: strucDivDom
+> 
+> ### ** Examples
+> 
+> # Calculate entropy on NDVI data binned to 15 gray levels
+> ndvi15 <- raster::raster(ndvi.15gl)
+> ndvi15Dom <- strucDivDom(ndvi15, fun = entropyDom)
+> ndvi15GLCM <- ndvi15Dom$GLCM
+> ndvi15Div <- ndvi15Dom$div
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("strucDivNest")
+> ### * strucDivNest
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: strucDivNest
+> ### Title: Quantify Spatial Structural Diversity Across Scales in an
+> ###   Arbitrary Raster Layer
+> ### Aliases: strucDivNest
+> 
+> ### ** Examples
+> 
+> # Construct a small raster file containing realizations of normal random variables:
+> a <- raster::raster(matrix(rnorm(648), 18, 36))
+> raster::plot(a)
+> # Calculate structural diversity entropy with delta = 2, double moving window scheme
+> sde_a <- strucDivNest(a, wslI = 3, wslO = 7, fun = entropy, delta = 2, na.handling = na.omit, 
++     rank = FALSE)
+Extracting values from raster file
+Calculating gray level co-occurrence matrix
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating horizontal structural diversity
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+> raster::plot(sde_a)
+> 
+> # Calculate structural diversity entropy with delta = 1, block nesting scheme 
+> b <- raster::raster(matrix(rnorm(2500), 50, 50))
+> raster::plot(b)
+> sde_b <- strucDivNest(b, wslI = 3, dimB = c(10, 10), oLap = 4, priorB = TRUE, fun = entropy, 
++     delta = 1, na.handling = na.pass, rank = FALSE)
+  |                                                                              |                                                                      |   0%
+> raster::plot(sde_b)
+> 
+> # Calculate entropy on NDVI data binned to 15 gray levels, domain nesting scheme 
+> ndvi.15gl <- raster::raster(ndvi.15gl)
+> entropyNest_ndvi15 <- strucDivNest(ndvi.15gl, wslI = 5, domain = TRUE, fun = entropy, 
++     na.handling = na.pass, rank = FALSE)
+Extracting values from raster file
+Calculating gray level co-occurrence matrix
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+Calculating horizontal structural diversity
+0%   10   20   30   40   50   60   70   80   90   100%
+[----|----|----|----|----|----|----|----|----|----|
+**************************************************|
+> raster::plot(entropyNest_ndvi15)
+> 
 > 
 > 
 > 
@@ -75,7 +199,7 @@ Calculating gray level co-occurrence matrix
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  0.913 0.028 0.941 0 0 
+Time elapsed:  39.086 0.313 47.109 0.001 0.001 
 > grDevices::dev.off()
 null device 
           1 

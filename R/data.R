@@ -15,7 +15,6 @@
 #' \item{\code{Data retrieval}}{Data was pre-processed and downloaded from Google Earth Engine.}
 #' }
 #' 
-#' 
 #' For further details, see \url{https://lpdaac.usgs.gov/products/mod13q1v006/}
 #' and \url{https://earthengine.google.com/}
 #'
@@ -41,8 +40,26 @@
 #' \item{\code{Data retrieval}}{Data was pre-processed and downloaded from Google Earth Engine.}
 #' }
 #' 
-#' 
 #' For further details, see \url{https://lpdaac.usgs.gov/products/mod13q1v006/}
 #' and \url{https://earthengine.google.com/}
 #'
+#' @examples
+#' # This dataset is essentially constructed via:
+#' nGrayLevels <- 15
+#' require(raster)
+#' ndvi <- raster(StrucDiv::ndvi)
+#' ndvi15 <- cut(ndvi, breaks=seq(minValue(ndvi), maxValue(ndvi), len=nGrayLevels + 1), 
+#'               include.lowest=TRUE, right=FALSE)
+#' 
 "ndvi.15gl"
+
+#' simulated patch data
+#'
+#' @format A matrix with 90 rows and 90 columns. Simulated patches.
+#'
+#' \describe{
+#' \item{\code{Simulated random patches}}{The background is random structure, depicting no spatial correlation, and structure is also random within patches.}
+#' \item{\code{Value range}}{Data contains 20 gray levels.}
+#' }
+#'
+"patch"

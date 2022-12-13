@@ -1,62 +1,136 @@
-#' @name metric 
-#' @rdname metric
-#' @title Spatial structural diversity metrics
+#' @name Diversity
+#' @rdname Diversity
+#' @title Spatial Structural Diversity Metrics
 #' @description
 #' The functions \code{entropy} , \code{entropyNorm}, \code{contrast}, \code{dissimilarity} and \code{homogeneity}
-#' are the spatial structural diversity metrics used in the default configuration of \code{\link{StrucDiv}}. 
-#' Structural diversity entropy is entropy with different \code{delta} parameters. Shannon entropy is employed, when \code{delta} = "0". 
-#' Shannon entropy has a window-dependent maximum.
-#' Additionally, the value gradient is considered when \code{delta} = "1" or \code{delta} = "2". 
-#' The values of structural diversity entropy with \code{delta} = "1" or \code{delta} = "2" are not restricted and depend on the values of the input raster.
-#' The metric \code{entropyNorm} is Shannon entropy normalized over maximum entropy, which depends on the size of the moving window. The metric \code{entropyNorm} ranges between 0 and 1.
-#' The metrics \code{contrast}, \code{dissimilarity} consider the value gradient, their values are not restricted and depend on the values of the input raster.
-#' The metric \code{homogeneity} quantifies the closeness of empirical probabilities to the diagonal and ranges between 0 and 1. 
-#' the metric \code{homogeneity} is 1 when all pixel pairs are the same and approaches 0 as differences increase.
-#' @param rank logical. Should values be replaced with ranks in each gray level co-occurrence 
+#' are the (spatial) structural diversity metrics used in the default configurations of \code{\link{strucDiv}} and \code{\link{strucDivNest}}. 
+#' Structural diversity entropy is \code{entropy} with different \code{delta} parameters. Shannon entropy is employed, when \code{delta = 0}. 
+#' Shannon entropy has a window-dependent maximum when \code{\link{strucDiv}} is used, which may be violated when \code{\link{strucDivNest}} is used, 
+#' depending on the posterior probabilities of pixel value co-occurrences.
+#' Additionally, the value gradient is considered when \code{delta = 1} or \code{delta = 2}. 
+#' The values of structural diversity entropy with \code{delta = 1} or \code{delta = 2} are not restricted and depend on the values of the input raster.
+#' the metric \code{entropyNorm} is Shannon entropy normalized over maximum entropy, which depends on the size of the moving window when no nesting is used. 
+#' The metric \code{entropyNorm} ranges between 0 and 1, when \code{\link{strucDiv}} is used, but may be larger than 1 when \code{\link{strucDivNest}} is used, 
+#' depending on the posterior probabilities of pixel value co-occurrences.
+#' The metrics \code{contrast} and \code{dissimilarity} consider the value gradient, their values are not restricted and depend on the values of the input raster.
+#' The metric \code{homogeneity} quantifies the closeness of empirical probabilities to the diagonal and ranges between 0 and 1 when \code{\link{strucDiv}} is used, 
+#' but may be larger than 1 when \code{\link{strucDivNest}} is used, depending on the posterior probabilities of pixel value co-occurrences.
+#' @param rank logical. Should values be replaced with ranks in each co-occurrence 
 #' matrix (GLCM)? Defaults to \code{FALSE}.
-#' @param delta character, takes 3 options: \code{"0"},\code{ "1"}, or \code{"2"}. 
-#' The parameter \code{delta} is the difference weight parameter, 
-#' it defines how the differences between pixel values within a pixel pair should be weighted.  
-#' If \code{rank = TRUE}, delta defines how the differences between ranks should be weighted.  
-#' The default value is \code{"0"} (no weight). Set \code{delta = "1"} for absolute difference weight, 
-#' or \code{delta = "2"} for squared difference weight. 
+#' @param vMat_big matrix. The matrix containing the pixel values of the outer scale. 
+#' Defaults to \code{NULL}, in which case no prior information is used.
+#' @param SpatMat is the probability matrix that is returned by an internal function
+#' to the \code{\link{strucDiv}} and \code{\link{strucDivNest}} functions. 
+#' @param delta numeric, takes 3 options: \code{0}, \code{1}, or \code{2}. 
+#' The \code{delta} parameter defines how the differences between pixel values within a pixel 
+#' pair are weighted.  
+#' If \code{rank = TRUE}, delta defines how the differences between ranks are weighted.  
+#' The default value is \code{0} (no weight). Set \code{delta = 1} for absolute weights, 
+#' or \code{delta = 2} for squared weights. 
 #' The \code{delta} parameter can only be set when the metric \code{entropy} is used. 
-#' The metric \code{dissimilarity} automatically employs \code{delta = "1"}, and \code{contrast} employs \code{delta = "2"}.
+#' The metric \code{dissimilarity} automatically employs \code{delta = 1}, and \code{contrast} employs \code{delta = 2}.
+#' @param nrp integer. The total number of pixel pairs. \code{nrp} is calculated internally by the 
+#' functions \code{\link{strucDiv}} and \code{\link{strucDivNest}} and passed to the structural 
+#' diversity metric functions.
 #' @param SpatMat the GLCM that is returned by an internal function
-#' to the \code{\link{StrucDiv}} function. 
-#' @param Hetx the spatial structural diversity matrix that is returned by an internal function
-#' to the \code{\link{StrucDiv}} function. the spatial structural diversity metric is calculated on every element
-#' of the GLCM, which generates the spatial structural diversity matrix \code{Hetx}. The sum of this
-#' matrix represents the spatial structural diversity estimate of the moving window, 
-#' the size of which is defined by \code{wsl} in the \code{\link{StrucDiv}} function.
-#' @param nrp integer. The total number of pixel pairs, which is calculated 
-#' internally and passed to the spatial structural diversity metric functions.
-#' The total number of pixel pairs is defined by the size of the moving window (\code{wsl x wsl}), 
-#' and by the angle.
-#' @param narm logical. Defines how missing values are treated, and is automatically set to 0 if na.handling = na.pass, and to 1 if na.handling = na.omit.
-#' @param display_progress logical. If TRUE the progress bar is displayed.
+#' to the \code{\link{strucDiv}} and \code{\link{strucDivNest}} functions. 
+#' @param Hetx the structural diversity matrix that is returned by an internal function
+#' to the \code{\link{strucDiv}} and \code{\link{strucDivNest}} functions. 
+#' The structural diversity metric is calculated on every element
+#' of the GLCM, which generates the structural diversity matrix \code{Hetx}. The sum of this
+#' matrix is assigned to the center pixel of the moving window. 
+#' @param narm logical. Should NAs be removed? 
+#' \code{narm} is automatically set to 0 if \code{na.handling = na.pass}, 
+#' and to 1 if \code{na.handling = na.omit}.
+#' @param display_progress logical. Should a progress bar be displayed?
 #' @param ... possible further arguments.
-#' @details This function is used internally and is called as an argument to \code{\link{StrucDiv}}.
-#' @return The output is a raster layer with the same dimensions as the input raster and is called a (spatial) structural diversity map. 
-#' It represents spatial structural diversity quantified on the spatial scale that is defined by the size of the moving window. 
-#' When \code{na.handling = na.pass}, then the output map will have an NA-edge of 0.5*(\code{wsl}-1), 
-#' and it will contain more missing values than the input raster.
+#' @details These functions are used internally and are called 
+#' as an argument to the \code{\link{strucDiv}} and \code{\link{strucDivNest}} functions.
 #' @importFrom raster raster
 #' @export
 
-entropy <- function(rank, delta, Hetx, SpatMat, nrp, narm, display_progress, ...) {
+homogeneity <- function(rank, delta, Hetx, vMat_big = NULL, SpatMat, nrp, narm, display_progress = TRUE, ...) {
   
-  rank_delta <- paste(rank, delta)
+  switch_function <- function(rank, vMat_big) {
+    
+    switch(EXPR = paste(rank, is.null(vMat_big)),
+           "TRUE TRUE" = .HomogeneityRank(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "TRUE FALSE" = .HomogeneityRankNested(Hetx = Hetx, vMat_big = vMat_big, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "FALSE TRUE" = .HomogeneityValue(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "FALSE FALSE" = .HomogeneityValueNested(Hetx = Hetx, vMat_big = vMat_big, PMat = SpatMat, narm = narm, display_progress = display_progress)
+           )
+  }
   
+  v <- switch_function(rank, vMat_big)
+  return(v)
+  
+}
+  
+#' @rdname Diversity
+#' @export
+
+
+dissimilarity <- function(rank, delta, Hetx, vMat_big = NULL, SpatMat, nrp, narm, display_progress, ...) {
+  
+  switch_function <- function(rank, vMat_big) {
+    
+    switch(EXPR = paste(rank, is.null(vMat_big)),
+           "TRUE TRUE" = .DissimilarityRank(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "TRUE FALSE" = .DissimilarityRankNested(Hetx = Hetx, vMat_big = vMat_big, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "FALSE TRUE" = .DissimilarityValue(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "FALSE FALSE" = .DissimilarityValueNested(Hetx = Hetx, vMat_big = vMat_big, PMat = SpatMat, narm = narm, display_progress = display_progress)
+           
+    )
+  }
+  
+  v <- switch_function(rank, vMat_big)
+  return(v)
+  
+}
+
+#' @rdname Diversity
+#' @export
+
+contrast <- function(rank, delta, Hetx, vMat_big = NULL, SpatMat, nrp, narm, display_progress, ...) {
+  
+  switch_function <- function(rank, vMat_big) {
+    
+    switch(EXPR = paste(rank, is.null(vMat_big)),
+           "TRUE TRUE" = .ContrastRank(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "TRUE FALSE" = .ContrastRankNested(Hetx = Hetx, vMat_big = vMat_big, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "FALSE TRUE" = .ContrastValue(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "FALSE FALSE" = .ContrastValueNested(Hetx = Hetx, vMat_big = vMat_big, PMat = SpatMat, narm = narm, display_progress = display_progress)
+    )
+  }
+  
+  v <- switch_function(rank, vMat_big)
+  return(v)
+  
+}
+
+#' @rdname Diversity
+#' @export
+
+entropy <- function(rank, delta, Hetx, vMat_big = NULL, SpatMat, nrp, narm, display_progress,  ...) {
+  
+  rank_delta <- paste(rank, delta, is.null(vMat_big))
+  
+
   switch_function <- function(rank_delta) {
     
     switch(EXPR = rank_delta,
-           "FALSE 0" = .Entropy(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
-           "TRUE 0" = .Entropy(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
-           "TRUE 1" = .WeightedEntropyAbsRank(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
-           "FALSE 1" = .WeightedEntropyAbsValue(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
-           "TRUE 2" = .WeightedEntropySqrRank(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
-           "FALSE 2" = .WeightedEntropySqrValue(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress)
+           "FALSE 0 TRUE" = .Entropy(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "TRUE 0 TRUE" = .Entropy(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "TRUE 1 TRUE" = .WeightedEntropyAbsRank(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "FALSE 1 TRUE" = .WeightedEntropyAbsValue(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "TRUE 2 TRUE" = .WeightedEntropySqrRank(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "FALSE 2 TRUE" = .WeightedEntropySqrValue(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "FALSE 0 FALSE" = .EntropyNested(Hetx = Hetx, vMat_big = vMat_big, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "TRUE 0 FALSE" = .EntropyNested(Hetx = Hetx, vMat_big = vMat_big, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "TRUE 1 FALSE" = .WeightedEntropyAbsRankNested(Hetx = Hetx, vMat_big = vMat_big, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "FALSE 1 FALSE" = .WeightedEntropyAbsValueNested(Hetx = Hetx, vMat_big = vMat_big, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "TRUE 2 FALSE" = .WeightedEntropySqrRankNested(Hetx = Hetx, vMat_big = vMat_big, PMat = SpatMat, narm = narm, display_progress = display_progress),
+           "FALSE 2 FALSE" = .WeightedEntropySqrValueNested(Hetx = Hetx, vMat_big = vMat_big, PMat = SpatMat, narm = narm, display_progress = display_progress)
     )
   }
   
@@ -65,74 +139,29 @@ entropy <- function(rank, delta, Hetx, SpatMat, nrp, narm, display_progress, ...
   
 }
 
-
-#' @rdname metric
+#' @rdname Diversity
 #' @export
 
-entropyNorm <- function(rank, delta, Hetx, SpatMat, nrp, narm, display_progress, ...) {
+entropyNorm <- function(rank, delta, Hetx, vMat_big = NULL, SpatMat, nrp, narm, display_progress, ...) {
   
-  v <- .NormalizedEntropy(Hetx = Hetx, PMat = SpatMat, nrp = nrp, narm = narm, display_progress = display_progress)
+  if(is.null(vMat_big)){
   
-  return(v)
-  
-}
-
-#' @rdname metric 
-#' @export
-
-contrast <- function(rank, delta, Hetx, SpatMat, nrp, narm, display_progress, ...) {
-  
-  switch_function <- function(rank) {
-    
-    switch(EXPR = as.character(rank),
-           "TRUE" = .ContrastRank(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
-           "FALSE" = .ContrastValue(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress)
-    )
+  v <- .NormalizedEntropy(Hetx = Hetx, PMat = SpatMat, nrp = nrp, narm = narm, 
+                          display_progress = display_progress)
   }
   
-  v <- switch_function(rank)
-  return(v)
-  
-}
-
-#' @rdname metric
-#' @export
-
-dissimilarity <- function(rank, delta, Hetx, SpatMat, nrp, narm, display_progress, ...) {
-  
-  switch_function <- function(rank) {
+  else{
     
-    switch(EXPR = as.character(rank),
-           "TRUE" = .DissimilarityRank(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
-           "FALSE" = .DissimilarityValue(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress)
-    )
+    v <- .NormalizedEntropyNested(Hetx = Hetx, vMat_big = vMat_big, PMat = SpatMat, 
+                                  nrp = nrp, narm = narm, display_progress = display_progress)
+    
   }
   
-  v <- switch_function(rank)
   return(v)
   
 }
 
-#' @rdname metric
-#' @export
 
-homogeneity <- function(rank, delta, Hetx, SpatMat, nrp, narm, display_progress, ...) {
-  
-  switch_function <- function(rank) {
-    
-    switch(EXPR = as.character(rank),
-           "TRUE" = .HomogeneityRank(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress),
-           "FALSE" = .HomogeneityValue(Hetx = Hetx, PMat = SpatMat, narm = narm, display_progress = display_progress)
-    )
-  }
-  
-  v <- switch_function(rank)
-  return(v)
-  
-}
-
-#' @rdname metric
-#' @export
 
 
 
