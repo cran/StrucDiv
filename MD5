@@ -1,4 +1,4 @@
-e39ff9472c8ff1861a8e6a773165f190 *DESCRIPTION
+e9844a5ed217a0e51c3ec5d9daf24344 *DESCRIPTION
 535e039b81c016cf3df0b05f455bad87 *NAMESPACE
 5cddd6c95ba7232503c0a7464d3cb4d1 *R/RcppExports.R
 dd5c9d197245d345dcb6a30c95be3eaf *R/StrucDiv.R
@@ -8,14 +8,14 @@ dd5c9d197245d345dcb6a30c95be3eaf *R/StrucDiv.R
 8510d2b75739b230771a0235cc68955a *R/getValuesWindow.R
 49e44fd42278028c5ed40b4db8df21ea *R/strucDivDom.R
 08fa74186df80f76f92fda7c88e89dfa *R/strucDivNest.R
-88f5dfdfcb2bd83a5db063814fcf1f4e *README.md
+19f73447af718775fff48d1ee9cdee68 *README.md
 4fa751217574ec4758a0db61be6bcecf *build/vignette.rds
 22e822f309343329b909a302c4f8d04e *data/ndvi.15gl.rda
 f13517c921c06334606917cfde0184e0 *data/ndvi.rda
 34d682b22cae86c0be035e13517c97bb *data/patch.rda
 13580c6098e5e8aa17d59be0ee61344d *inst/doc/StrucDiv.R
-2fadc4a2669a60db8b279042cf065058 *inst/doc/StrucDiv.Rmd
-779ed2d29cb31699e72e3fe0bf02044c *inst/doc/StrucDiv.html
+52b0e3dacc9b431e35316a516ebd2755 *inst/doc/StrucDiv.Rmd
+7a8f5d5a3977b043b9c2e1d6c44e2cad *inst/doc/StrucDiv.html
 58a65ef5ed102146c2884c5238f3f935 *man/Diversity.Rd
 af87ffb7c2c9f68bf61efb59a7042f34 *man/DiversityDom.Rd
 fc16ac4588d792e8c140ca13d7614bae *man/figures/README-example-1.png
@@ -91,6 +91,6 @@ b9d133ff77aa48cb34b4bf1f6ea08f2d *tests/Examples/StrucDiv-Ex.Rout.save
 8f755c73baea0b01af26cc57203f2387 *tests/testthat.R
 89916a1c1fb505c709b5d77f7ead62c9 *tests/testthat.Rout.save
 7e63e5972b79295661d2561ad0037d48 *tests/testthat/test_rasterlayer.R
-2fadc4a2669a60db8b279042cf065058 *vignettes/StrucDiv.Rmd
+52b0e3dacc9b431e35316a516ebd2755 *vignettes/StrucDiv.Rmd
 34f598021ee8c6664fb249fb6d4ebcc5 *vignettes/bibliography.bib
 ee05e5804068526eab95a1ea4aa94e2b *vignettes/figIn/vign.png

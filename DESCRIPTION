@@ -1,7 +1,7 @@
 Type: Package
 Package: StrucDiv
 Title: Spatial Structural Diversity Quantification in Raster Data
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: c(
     person("Leila", "Schuh", , "l.schuh@posteo.net", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-5646-7767")),
@@ -34,7 +34,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.2
 NeedsCompilation: yes
-Packaged: 2022-12-13 06:55:54 UTC; leila
+Packaged: 2022-12-13 16:35:10 UTC; leila
 Author: Leila Schuh [aut, cre] (<https://orcid.org/0000-0001-5646-7767>),
   Reinhard Furrer [aut] (<https://orcid.org/0000-0002-6319-2332>),
   Kalina Cherneva [ctb, ctr],
@@ -43,4 +43,4 @@ Author: Leila Schuh [aut, cre] (<https://orcid.org/0000-0001-5646-7767>),
   University Research Priority Progam Global Change and Biodiversity of
     the University of Zurich [fnd]
 Repository: CRAN
-Date/Publication: 2022-12-13 08:20:02 UTC
+Date/Publication: 2022-12-14 08:20:02 UTC

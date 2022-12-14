@@ -54,7 +54,7 @@ The function `strucDivDom()` quantifies structural diversity of the domain and r
 
 ### Structural diversity metrics
 
-Spatial structural diversity metrics include: contrast, dissimilarity, homogeneity, entropy in different formulations, and normalized entropy. Structural diversity entropy includes a difference weight $\delta \in \{0, 1, 2\}$, which weighs the differences between pixel values  v$_{i}$ and v$_{j}$, using either absolute, or square weights. When $\delta$ = 0, structural diversity entropy corresponds to Shannon entropy [@Shannon]. Shannon entropy has a scale-specific maximum, however, when the `strucDivNest()` function is used, this maximum may be violated, depending on the posterior probabilities of pixel value co-occurrences.
+The following metrics are available: structural diversity entropy, normalized entropy, contrast, dissimilarity, and homogeneity. Structural diversity entropy includes a difference weight $\delta \in \{0, 1, 2\}$, which weighs the differences between pixel values  v$_{i}$ and v$_{j}$, using either absolute, or square weights. When $\delta$ = 0, structural diversity entropy corresponds to Shannon entropy [@Shannon]. Shannon entropy has a scale-specific maximum, however, when the `strucDivNest()` function is used, this maximum may be violated, depending on the posterior probabilities of pixel value co-occurrences.
 The values of structural diversity entropy with $\delta \in \{1, 2\}$ are not restricted and depend on the values of the input raster.
 Normalized entropy is Shannon entropy normalized over maximum entropy. When the `strucDiv()` function is used, normalized entropy ranges between 0 and 1. When the `strucDivNest()` function is used, normalized entropy may be larger than 1, depending on the posterior probabilities of pixel value co-occurrences.
 Dissimilarity naturally employs $\delta = 1$, contrast employs $\delta = 2$, and homogeneity employs $\delta = 2$ in the denominator.
@@ -66,6 +66,8 @@ Homogeneity measures the closeness of $p_{ij}$ to the diagonal in the GLCM, and 
 \begin{align}
   \text{Structural diversity entropy} & = \ - \sum_{i,j=1}^{m} p_{ij} \ln p_{ij} \ |v_{i}-v_{j}| ^ \delta,  \delta \in \{0,1,2\}
      \label{DivEnt} \\
+       \text{Normalized entropy} & = \ - \sum_{i,j=1}^{m} p_{ij} \ln p_{ij} / \ln n 
+     \label{EntNorm} \\
    \text{Contrast} & = \sum_{i,j=1}^{m} p_{ij} \ |v_{i}-v_{j}| ^ \delta, \delta = 2
     \label{ValCon} \\
    \text{Dissimilarity} & = \sum_{i,j=1}^{m} p_{ij} \ |v_{i}-v_{j}| ^\delta, \delta = 1
@@ -79,6 +81,8 @@ Homogeneity measures the closeness of $p_{ij}$ to the diagonal in the GLCM, and 
 \begin{align}
    \text{Structural diversity entropy} & = \ - \sum_{r,s=1}^{l} p_{rs} \ln p_{rs} \ |r-s| ^ \delta,  \delta \in \{0,1,2\} 
     \label{RankDivEnt}\\
+    \text{Normalized entropy} & = \ - \sum_{r,s=1}^{l} p_{rs} \ln p_{rs} / \ln l 
+    \label{RankEntnorm}\\
     \text{Contrast} & = \sum_{r,s=1}^{l} p_{rs} \ |r-s| ^ \delta, \delta = 2
    \label{RankCon} \\
    \text{Dissimilarity} & = \sum_{r,s=1}^{l} p_{rs} \ |r-s| ^ \delta, \delta = 1
